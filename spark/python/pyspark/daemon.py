@@ -101,7 +101,7 @@ def manager():
         signal.signal(SIGTERM, SIG_DFL)
         # Send SIGHUP to notify workers of shutdown
         os.kill(0, SIGHUP)
-        exit(code)
+        sys.exit(code)
 
     def handle_sigterm(*args):
         shutdown(1)

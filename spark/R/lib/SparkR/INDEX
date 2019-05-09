@@ -122,6 +122,7 @@ dropna                  A set of SparkDataFrame functions working with
 dtypes                  DataTypes
 endsWith                endsWith
 except                  except
+exceptAll               exceptAll
 explain                 Explain
 filter                  Filter
 first                   Return the first row of a SparkDataFrame
@@ -145,6 +146,7 @@ insertInto              insertInto
 install.spark           Download and Install Apache Spark to a Local
                         Directory
 intersect               Intersect
+intersectAll            intersectAll
 isActive                isActive
 isLocal                 isLocal
 isStreaming             isStreaming
@@ -200,6 +202,7 @@ refreshTable            Invalidates and refreshes all the cached data
 registerTempTable       (Deprecated) Register Temporary Table
 rename                  rename
 repartition             Repartition
+repartitionByRange      Repartition by range
 rollup                  rollup
 rowsBetween             rowsBetween
 sample                  Sample

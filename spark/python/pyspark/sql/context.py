@@ -93,6 +93,11 @@ class SQLContext(object):
         """
         return self._jsqlContext
 
+    @property
+    def _conf(self):
+        """Accessor for the JVM SQL-specific configurations"""
+        return self.sparkSession._jsparkSession.sessionState().conf()
+
     @classmethod
     @since(1.6)
     def getOrCreate(cls, sc):
@@ -543,7 +548,7 @@ def _test():
         optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
     globs['sc'].stop()
     if failure_count:
-        exit(-1)
+        sys.exit(-1)
 
 
 if __name__ == "__main__":

@@ -200,103 +200,318 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+------------------------------------------------------------------------------------
+This project bundles some components that are also licensed under the Apache
+License Version 2.0:
 
-=======================================================================
-Apache Spark Subcomponents:
+commons-beanutils:commons-beanutils
+org.apache.zookeeper:zookeeper
+oro:oro
+commons-configuration:commons-configuration
+commons-digester:commons-digester
+com.chuusai:shapeless_2.11
+com.googlecode.javaewah:JavaEWAH
+com.twitter:chill-java
+com.twitter:chill_2.11
+com.univocity:univocity-parsers
+javax.jdo:jdo-api
+joda-time:joda-time
+net.sf.opencsv:opencsv
+org.apache.derby:derby
+org.objenesis:objenesis
+org.roaringbitmap:RoaringBitmap
+org.scalanlp:breeze-macros_2.11
+org.scalanlp:breeze_2.11
+org.typelevel:macro-compat_2.11
+org.yaml:snakeyaml
+org.apache.xbean:xbean-asm5-shaded
+com.squareup.okhttp3:logging-interceptor
+com.squareup.okhttp3:okhttp
+com.squareup.okio:okio
+org.apache.spark:spark-catalyst_2.11
+org.apache.spark:spark-kvstore_2.11
+org.apache.spark:spark-launcher_2.11
+org.apache.spark:spark-mllib-local_2.11
+org.apache.spark:spark-network-common_2.11
+org.apache.spark:spark-network-shuffle_2.11
+org.apache.spark:spark-sketch_2.11
+org.apache.spark:spark-tags_2.11
+org.apache.spark:spark-unsafe_2.11
+commons-httpclient:commons-httpclient
+com.vlkan:flatbuffers
+com.ning:compress-lzf
+io.airlift:aircompressor
+io.dropwizard.metrics:metrics-core
+io.dropwizard.metrics:metrics-ganglia
+io.dropwizard.metrics:metrics-graphite
+io.dropwizard.metrics:metrics-json
+io.dropwizard.metrics:metrics-jvm
+org.iq80.snappy:snappy
+com.clearspring.analytics:stream
+com.jamesmurty.utils:java-xmlbuilder
+commons-codec:commons-codec
+commons-collections:commons-collections
+io.fabric8:kubernetes-client
+io.fabric8:kubernetes-model
+io.netty:netty
+io.netty:netty-all
+net.hydromatic:eigenbase-properties
+net.sf.supercsv:super-csv
+org.apache.arrow:arrow-format
+org.apache.arrow:arrow-memory
+org.apache.arrow:arrow-vector
+org.apache.calcite:calcite-avatica
+org.apache.calcite:calcite-core
+org.apache.calcite:calcite-linq4j
+org.apache.commons:commons-crypto
+org.apache.commons:commons-lang3
+org.apache.hadoop:hadoop-annotations
+org.apache.hadoop:hadoop-auth
+org.apache.hadoop:hadoop-client
+org.apache.hadoop:hadoop-common
+org.apache.hadoop:hadoop-hdfs
+org.apache.hadoop:hadoop-mapreduce-client-app
+org.apache.hadoop:hadoop-mapreduce-client-common
+org.apache.hadoop:hadoop-mapreduce-client-core
+org.apache.hadoop:hadoop-mapreduce-client-jobclient
+org.apache.hadoop:hadoop-mapreduce-client-shuffle
+org.apache.hadoop:hadoop-yarn-api
+org.apache.hadoop:hadoop-yarn-client
+org.apache.hadoop:hadoop-yarn-common
+org.apache.hadoop:hadoop-yarn-server-common
+org.apache.hadoop:hadoop-yarn-server-web-proxy
+org.apache.httpcomponents:httpclient
+org.apache.httpcomponents:httpcore
+org.apache.orc:orc-core
+org.apache.orc:orc-mapreduce
+org.mortbay.jetty:jetty
+org.mortbay.jetty:jetty-util
+com.jolbox:bonecp
+org.json4s:json4s-ast_2.11
+org.json4s:json4s-core_2.11
+org.json4s:json4s-jackson_2.11
+org.json4s:json4s-scalap_2.11
+com.carrotsearch:hppc
+com.fasterxml.jackson.core:jackson-annotations
+com.fasterxml.jackson.core:jackson-core
+com.fasterxml.jackson.core:jackson-databind
+com.fasterxml.jackson.dataformat:jackson-dataformat-yaml
+com.fasterxml.jackson.module:jackson-module-jaxb-annotations
+com.fasterxml.jackson.module:jackson-module-paranamer
+com.fasterxml.jackson.module:jackson-module-scala_2.11
+com.github.mifmif:generex
+com.google.code.findbugs:jsr305
+com.google.code.gson:gson
+com.google.inject:guice
+com.google.inject.extensions:guice-servlet
+com.twitter:parquet-hadoop-bundle
+commons-cli:commons-cli
+commons-dbcp:commons-dbcp
+commons-io:commons-io
+commons-lang:commons-lang
+commons-logging:commons-logging
+commons-net:commons-net
+commons-pool:commons-pool
+io.fabric8:zjsonpatch
+javax.inject:javax.inject
+javax.validation:validation-api
+log4j:apache-log4j-extras
+log4j:log4j
+net.sf.jpam:jpam
+org.apache.avro:avro
+org.apache.avro:avro-ipc
+org.apache.avro:avro-mapred
+org.apache.commons:commons-compress
+org.apache.commons:commons-math3
+org.apache.curator:curator-client
+org.apache.curator:curator-framework
+org.apache.curator:curator-recipes
+org.apache.directory.api:api-asn1-api
+org.apache.directory.api:api-util
+org.apache.directory.server:apacheds-i18n
+org.apache.directory.server:apacheds-kerberos-codec
+org.apache.htrace:htrace-core
+org.apache.ivy:ivy
+org.apache.mesos:mesos
+org.apache.parquet:parquet-column
+org.apache.parquet:parquet-common
+org.apache.parquet:parquet-encoding
+org.apache.parquet:parquet-format
+org.apache.parquet:parquet-hadoop
+org.apache.parquet:parquet-jackson
+org.apache.thrift:libfb303
+org.apache.thrift:libthrift
+org.codehaus.jackson:jackson-core-asl
+org.codehaus.jackson:jackson-mapper-asl
+org.datanucleus:datanucleus-api-jdo
+org.datanucleus:datanucleus-core
+org.datanucleus:datanucleus-rdbms
+org.lz4:lz4-java
+org.spark-project.hive:hive-beeline
+org.spark-project.hive:hive-cli
+org.spark-project.hive:hive-exec
+org.spark-project.hive:hive-jdbc
+org.spark-project.hive:hive-metastore
+org.xerial.snappy:snappy-java
+stax:stax-api
+xerces:xercesImpl
+org.codehaus.jackson:jackson-jaxrs
+org.codehaus.jackson:jackson-xc
+org.eclipse.jetty:jetty-client
+org.eclipse.jetty:jetty-continuation
+org.eclipse.jetty:jetty-http
+org.eclipse.jetty:jetty-io
+org.eclipse.jetty:jetty-jndi
+org.eclipse.jetty:jetty-plus
+org.eclipse.jetty:jetty-proxy
+org.eclipse.jetty:jetty-security
+org.eclipse.jetty:jetty-server
+org.eclipse.jetty:jetty-servlet
+org.eclipse.jetty:jetty-servlets
+org.eclipse.jetty:jetty-util
+org.eclipse.jetty:jetty-webapp
+org.eclipse.jetty:jetty-xml
 
-The Apache Spark project contains subcomponents with separate copyright
-notices and license terms. Your use of the source code for the these
-subcomponents is subject to the terms and conditions of the following
-licenses.
+core/src/main/java/org/apache/spark/util/collection/TimSort.java
+core/src/main/resources/org/apache/spark/ui/static/bootstrap*
+core/src/main/resources/org/apache/spark/ui/static/jsonFormatter*
+core/src/main/resources/org/apache/spark/ui/static/vis*
+docs/js/vendor/bootstrap.js
 
 
-========================================================================
-For heapq (pyspark/heapq3.py):
-========================================================================
+------------------------------------------------------------------------------------
+This product bundles various third-party components under other open source licenses.
+This section summarizes those components and their licenses. See licenses-binary/
+for text of these licenses.
 
-See license/LICENSE-heapq.txt
 
-========================================================================
-For SnapTree:
-========================================================================
+BSD 2-Clause
+------------
 
-See license/LICENSE-SnapTree.txt
+com.github.luben:zstd-jni
+javolution:javolution
+com.esotericsoftware:kryo-shaded
+com.esotericsoftware:minlog
+com.esotericsoftware:reflectasm
+com.google.protobuf:protobuf-java
+org.codehaus.janino:commons-compiler
+org.codehaus.janino:janino
+jline:jline
+org.jodd:jodd-core
 
-========================================================================
-For jbcrypt:
-========================================================================
 
-See license/LICENSE-jbcrypt.txt
+BSD 3-Clause
+------------
 
-========================================================================
-BSD-style licenses
-========================================================================
+dk.brics.automaton:automaton
+org.antlr:antlr-runtime
+org.antlr:ST4
+org.antlr:stringtemplate
+org.antlr:antlr4-runtime
+antlr:antlr
+com.github.fommil.netlib:core
+com.thoughtworks.paranamer:paranamer
+org.scala-lang:scala-compiler
+org.scala-lang:scala-library
+org.scala-lang:scala-reflect
+org.scala-lang.modules:scala-parser-combinators_2.11
+org.scala-lang.modules:scala-xml_2.11
+org.fusesource.leveldbjni:leveldbjni-all
+net.sourceforge.f2j:arpack_combined_all
+xmlenc:xmlenc
+net.sf.py4j:py4j
+org.jpmml:pmml-model
+org.jpmml:pmml-schema
 
-The following components are provided under a BSD-style license. See project link for details.
-The text of each license is also included at licenses/LICENSE-[project].txt.
+python/lib/py4j-*-src.zip
+python/pyspark/cloudpickle.py
+python/pyspark/join.py
+core/src/main/resources/org/apache/spark/ui/static/d3.min.js
 
-     (BSD 3 Clause) netlib core (com.github.fommil.netlib:core:1.1.2 - https://github.com/fommil/netlib-java/core)
-     (BSD 3 Clause) JPMML-Model (org.jpmml:pmml-model:1.2.7 - https://github.com/jpmml/jpmml-model)
-     (BSD License) AntLR Parser Generator (antlr:antlr:2.7.7 - http://www.antlr.org/)
-     (BSD License) ANTLR 4.5.2-1 (org.antlr:antlr4:4.5.2-1 - http://wwww.antlr.org/)
-     (BSD licence) ANTLR ST4 4.0.4 (org.antlr:ST4:4.0.4 - http://www.stringtemplate.org)
-     (BSD licence) ANTLR StringTemplate (org.antlr:stringtemplate:3.2.1 - http://www.stringtemplate.org)
-     (BSD License) Javolution (javolution:javolution:5.5.1 - http://javolution.org)
-     (BSD) JLine (jline:jline:0.9.94 - http://jline.sourceforge.net)
-     (BSD) ParaNamer Core (com.thoughtworks.paranamer:paranamer:2.3 - http://paranamer.codehaus.org/paranamer)
-     (BSD) ParaNamer Core (com.thoughtworks.paranamer:paranamer:2.6 - http://paranamer.codehaus.org/paranamer)
-     (BSD 3 Clause) Scala (http://www.scala-lang.org/download/#License)
-        (Interpreter classes (all .scala files in repl/src/main/scala
-        except for Main.Scala, SparkHelper.scala and ExecutorClassLoader.scala),
-        and for SerializableMapWrapper in JavaUtils.scala)
-     (BSD-like) Scala Actors library (org.scala-lang:scala-actors:2.11.8 - http://www.scala-lang.org/)
-     (BSD-like) Scala Compiler (org.scala-lang:scala-compiler:2.11.8 - http://www.scala-lang.org/)
-     (BSD-like) Scala Compiler (org.scala-lang:scala-reflect:2.11.8 - http://www.scala-lang.org/)
-     (BSD-like) Scala Library (org.scala-lang:scala-library:2.11.8 - http://www.scala-lang.org/)
-     (BSD-like) Scalap (org.scala-lang:scalap:2.11.8 - http://www.scala-lang.org/)
-     (BSD-style) scalacheck (org.scalacheck:scalacheck_2.11:1.10.0 - http://www.scalacheck.org)
-     (BSD-style) spire (org.spire-math:spire_2.11:0.7.1 - http://spire-math.org)
-     (BSD-style) spire-macros (org.spire-math:spire-macros_2.11:0.7.1 - http://spire-math.org)
-     (New BSD License) Kryo (com.esotericsoftware:kryo:3.0.3 - https://github.com/EsotericSoftware/kryo)
-     (New BSD License) MinLog (com.esotericsoftware:minlog:1.3.0 - https://github.com/EsotericSoftware/minlog)
-     (New BSD license) Protocol Buffer Java API (com.google.protobuf:protobuf-java:2.5.0 - http://code.google.com/p/protobuf)
-     (New BSD license) Protocol Buffer Java API (org.spark-project.protobuf:protobuf-java:2.4.1-shaded - http://code.google.com/p/protobuf)
-     (The BSD License) Fortran to Java ARPACK (net.sourceforge.f2j:arpack_combined_all:0.1 - http://f2j.sourceforge.net)
-     (The BSD License) xmlenc Library (xmlenc:xmlenc:0.52 - http://xmlenc.sourceforge.net)
-     (The New BSD License) Py4J (net.sf.py4j:py4j:0.10.7 - http://py4j.sourceforge.net/)
-     (Two-clause BSD-style license) JUnit-Interface (com.novocode:junit-interface:0.10 - http://github.com/szeiger/junit-interface/)
-     (BSD licence) sbt and sbt-launch-lib.bash
-     (BSD 3 Clause) d3.min.js (https://github.com/mbostock/d3/blob/master/LICENSE)
-     (BSD 3 Clause) DPark (https://github.com/douban/dpark/blob/master/LICENSE)
-     (BSD 3 Clause) CloudPickle (https://github.com/cloudpipe/cloudpickle/blob/master/LICENSE)
-     (BSD 2 Clause) Zstd-jni (https://github.com/luben/zstd-jni/blob/master/LICENSE)
-     (BSD license) Zstd (https://github.com/facebook/zstd/blob/v1.3.1/LICENSE)
+The CSS style for the navigation sidebar of the documentation was originally
+submitted by Óscar Nájera for the scikit-learn project. The scikit-learn project
+is distributed under the 3-Clause BSD license.
 
-========================================================================
-MIT licenses
-========================================================================
 
-The following components are provided under the MIT License. See project link for details.
-The text of each license is also included at licenses/LICENSE-[project].txt.
+MIT License
+-----------
 
-     (MIT License) JCL 1.1.1 implemented over SLF4J (org.slf4j:jcl-over-slf4j:1.7.5 - http://www.slf4j.org)
-     (MIT License) JUL to SLF4J bridge (org.slf4j:jul-to-slf4j:1.7.5 - http://www.slf4j.org)
-     (MIT License) SLF4J API Module (org.slf4j:slf4j-api:1.7.5 - http://www.slf4j.org)
-     (MIT License) SLF4J LOG4J-12 Binding (org.slf4j:slf4j-log4j12:1.7.5 - http://www.slf4j.org)
-     (MIT License) pyrolite (org.spark-project:pyrolite:2.0.1 - http://pythonhosted.org/Pyro4/)
-     (MIT License) scopt (com.github.scopt:scopt_2.11:3.2.0 - https://github.com/scopt/scopt)
-     (The MIT License) Mockito (org.mockito:mockito-core:1.9.5 - http://www.mockito.org)
-     (MIT License) jquery (https://jquery.org/license/)
-     (MIT License) AnchorJS (https://github.com/bryanbraun/anchorjs)
-     (MIT License) graphlib-dot (https://github.com/cpettitt/graphlib-dot)
-     (MIT License) dagre-d3 (https://github.com/cpettitt/dagre-d3)
-     (MIT License) sorttable (https://github.com/stuartlangridge/sorttable)
-     (MIT License) boto (https://github.com/boto/boto/blob/develop/LICENSE)
-     (MIT License) datatables (http://datatables.net/license)
-     (MIT License) mustache (https://github.com/mustache/mustache/blob/master/LICENSE)
-     (MIT License) cookies (http://code.google.com/p/cookies/wiki/License)
-     (MIT License) blockUI (http://jquery.malsup.com/block/)
-     (MIT License) RowsGroup (http://datatables.net/license/mit)
-     (MIT License) jsonFormatter (http://www.jqueryscript.net/other/jQuery-Plugin-For-Pretty-JSON-Formatting-jsonFormatter.html)
-     (MIT License) modernizr (https://github.com/Modernizr/Modernizr/blob/master/LICENSE)
-     (MIT License) machinist (https://github.com/typelevel/machinist)
+org.spire-math:spire-macros_2.11
+org.spire-math:spire_2.11
+org.typelevel:machinist_2.11
+net.razorvine:pyrolite
+org.slf4j:jcl-over-slf4j
+org.slf4j:jul-to-slf4j
+org.slf4j:slf4j-api
+org.slf4j:slf4j-log4j12
+com.github.scopt:scopt_2.11
+
+core/src/main/resources/org/apache/spark/ui/static/dagre-d3.min.js
+core/src/main/resources/org/apache/spark/ui/static/*dataTables*
+core/src/main/resources/org/apache/spark/ui/static/graphlib-dot.min.js
+ore/src/main/resources/org/apache/spark/ui/static/jquery*
+core/src/main/resources/org/apache/spark/ui/static/sorttable.js
+docs/js/vendor/anchor.min.js
+docs/js/vendor/jquery*
+docs/js/vendor/modernizer*
+
+
+Common Development and Distribution License (CDDL) 1.0
+------------------------------------------------------
+
+javax.activation:activation  http://www.oracle.com/technetwork/java/javase/tech/index-jsp-138795.html
+javax.xml.stream:stax-api    https://jcp.org/en/jsr/detail?id=173
+
+
+Common Development and Distribution License (CDDL) 1.1
+------------------------------------------------------
+
+javax.annotation:javax.annotation-api    https://jcp.org/en/jsr/detail?id=250
+javax.servlet:javax.servlet-api   https://javaee.github.io/servlet-spec/
+javax.transaction:jta http://www.oracle.com/technetwork/java/index.html
+javax.ws.rs:javax.ws.rs-api https://github.com/jax-rs
+javax.xml.bind:jaxb-api    https://github.com/javaee/jaxb-v2
+org.glassfish.hk2:hk2-api https://github.com/javaee/glassfish
+org.glassfish.hk2:hk2-locator (same)
+org.glassfish.hk2:hk2-utils
+org.glassfish.hk2:osgi-resource-locator
+org.glassfish.hk2.external:aopalliance-repackaged
+org.glassfish.hk2.external:javax.inject
+org.glassfish.jersey.bundles.repackaged:jersey-guava
+org.glassfish.jersey.containers:jersey-container-servlet
+org.glassfish.jersey.containers:jersey-container-servlet-core
+org.glassfish.jersey.core:jersey-client
+org.glassfish.jersey.core:jersey-common
+org.glassfish.jersey.core:jersey-server
+org.glassfish.jersey.media:jersey-media-jaxb
+
+
+Mozilla Public License (MPL) 1.1
+--------------------------------
+
+com.github.rwl:jtransforms https://sourceforge.net/projects/jtransforms/
+
+
+Python Software Foundation License
+----------------------------------
+
+pyspark/heapq3.py
+
+
+Public Domain
+-------------
+
+aopalliance:aopalliance
+net.iharder:base64
+org.tukaani:xz
+
+
+Creative Commons CC0 1.0 Universal Public Domain Dedication
+-----------------------------------------------------------
+(see LICENSE-CC0.txt)
+
+data/mllib/images/kittens/29.5.a_b_EGDP022204.jpg
+data/mllib/images/kittens/54893.jpg
+data/mllib/images/kittens/DP153539.jpg
+data/mllib/images/kittens/DP802813.jpg
+data/mllib/images/multi-channel/chr30.4.184.jpg

@@ -647,7 +647,7 @@ class PowerIterationClustering(object):
     @classmethod
     @since('1.5.0')
     def train(cls, rdd, k, maxIterations=100, initMode="random"):
-        """
+        r"""
         :param rdd:
           An RDD of (i, j, s\ :sub:`ij`\) tuples representing the
           affinity matrix, which is the matrix A in the PIC paper.  The
@@ -1054,7 +1054,7 @@ def _test():
     (failure_count, test_count) = doctest.testmod(globs=globs, optionflags=doctest.ELLIPSIS)
     globs['sc'].stop()
     if failure_count:
-        exit(-1)
+        sys.exit(-1)
 
 
 if __name__ == "__main__":

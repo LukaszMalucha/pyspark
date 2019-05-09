@@ -69,6 +69,7 @@ else:
     xrange = range
 
 from pyspark import cloudpickle
+from pyspark.util import _exception_message
 
 
 __all__ = ["PickleSerializer", "MarshalSerializer", "UTF8Deserializer"]
@@ -184,27 +185,31 @@ class FramedSerializer(Serializer):
         raise NotImplementedError
 
 
-class ArrowSerializer(FramedSerializer):
+class ArrowStreamSerializer(Serializer):
     """
-    Serializes bytes as Arrow data with the Arrow file format.
+    Serializes Arrow record batches as a stream.
     """
 
-    def dumps(self, batch):
+    def dump_stream(self, iterator, stream):
         import pyarrow as pa
-        import io
-        sink = io.BytesIO()
-        writer = pa.RecordBatchFileWriter(sink, batch.schema)
-        writer.write_batch(batch)
-        writer.close()
-        return sink.getvalue()
+        writer = None
+        try:
+            for batch in iterator:
+                if writer is None:
+                    writer = pa.RecordBatchStreamWriter(stream, batch.schema)
+                writer.write_batch(batch)
+        finally:
+            if writer is not None:
+                writer.close()
 
-    def loads(self, obj):
+    def load_stream(self, stream):
         import pyarrow as pa
-        reader = pa.RecordBatchFileReader(pa.BufferReader(obj))
-        return reader.read_all()
+        reader = pa.open_stream(stream)
+        for batch in reader:
+            yield batch
 
     def __repr__(self):
-        return "ArrowSerializer"
+        return "ArrowStreamSerializer"
 
 
 def _create_batch(series, timezone):
@@ -228,12 +233,14 @@ def _create_batch(series, timezone):
     def create_array(s, t):
         mask = s.isnull()
         # Ensure timestamp series are in expected form for Spark internal representation
+        # TODO: maybe don't need None check anymore as of Arrow 0.9.1
         if t is not None and pa.types.is_timestamp(t):
             s = _check_series_convert_timestamps_internal(s.fillna(0), timezone)
             # TODO: need cast after Arrow conversion, ns values cause error with pandas 0.19.2
             return pa.Array.from_pandas(s, mask=mask).cast(t, safe=False)
         elif t is not None and pa.types.is_string(t) and sys.version < '3':
             # TODO: need decode before converting to Arrow in Python 2
+            # TODO: don't need as of Arrow 0.9.1
             return pa.Array.from_pandas(s.apply(
                 lambda v: v.decode("utf-8") if isinstance(v, str) else v), mask=mask, type=t)
         elif t is not None and pa.types.is_decimal(t) and \
@@ -241,7 +248,10 @@ def _create_batch(series, timezone):
             # TODO: see ARROW-2432. Remove when the minimum PyArrow version becomes 0.10.0.
             return pa.Array.from_pandas(s.apply(
                 lambda v: decimal.Decimal('NaN') if v is None else v), mask=mask, type=t)
-        return pa.Array.from_pandas(s, mask=mask, type=t)
+        elif LooseVersion(pa.__version__) < LooseVersion("0.11.0"):
+            # TODO: see ARROW-1949. Remove when the minimum PyArrow version becomes 0.11.0.
+            return pa.Array.from_pandas(s, mask=mask, type=t)
+        return pa.Array.from_pandas(s, mask=mask, type=t, safe=False)
 
     arrs = [create_array(s, t) for s, t in series]
     return pa.RecordBatch.from_arrays(arrs, ["_%d" % i for i in xrange(len(arrs))])
@@ -255,6 +265,15 @@ class ArrowStreamPandasSerializer(Serializer):
     def __init__(self, timezone):
         super(ArrowStreamPandasSerializer, self).__init__()
         self._timezone = timezone
+
+    def arrow_to_pandas(self, arrow_column):
+        from pyspark.sql.types import from_arrow_type, \
+            _check_series_convert_date, _check_series_localize_timestamps
+
+        s = arrow_column.to_pandas()
+        s = _check_series_convert_date(s, from_arrow_type(arrow_column.type))
+        s = _check_series_localize_timestamps(s, self._timezone)
+        return s
 
     def dump_stream(self, iterator, stream):
         """
@@ -278,16 +297,11 @@ class ArrowStreamPandasSerializer(Serializer):
         """
         Deserialize ArrowRecordBatches to an Arrow table and return as a list of pandas.Series.
         """
-        from pyspark.sql.types import from_arrow_schema, _check_dataframe_convert_date, \
-            _check_dataframe_localize_timestamps
         import pyarrow as pa
         reader = pa.open_stream(stream)
-        schema = from_arrow_schema(reader.schema)
+
         for batch in reader:
-            pdf = batch.to_pandas()
-            pdf = _check_dataframe_convert_date(pdf, schema)
-            pdf = _check_dataframe_localize_timestamps(pdf, self._timezone)
-            yield [c for _, c in pdf.iteritems()]
+            yield [self.arrow_to_pandas(c) for c in pa.Table.from_batches([batch]).itercolumns()]
 
     def __repr__(self):
         return "ArrowStreamPandasSerializer"
@@ -572,7 +586,18 @@ class PickleSerializer(FramedSerializer):
 class CloudPickleSerializer(PickleSerializer):
 
     def dumps(self, obj):
-        return cloudpickle.dumps(obj, 2)
+        try:
+            return cloudpickle.dumps(obj, 2)
+        except pickle.PickleError:
+            raise
+        except Exception as e:
+            emsg = _exception_message(e)
+            if "'i' format requires" in emsg:
+                msg = "Object too large to serialize: %s" % emsg
+            else:
+                msg = "Could not serialize object: %s: %s" % (e.__class__.__name__, emsg)
+            cloudpickle.print_exec(sys.stderr)
+            raise pickle.PicklingError(msg)
 
 
 class MarshalSerializer(FramedSerializer):
@@ -712,7 +737,7 @@ def write_with_length(obj, stream):
 class ChunkedStream(object):
 
     """
-    This file-like object takes a stream of data, of unknown length, and breaks it into fixed
+    This is a file-like object takes a stream of data, of unknown length, and breaks it into fixed
     length frames.  The intended use case is serializing large data and sending it immediately over
     a socket -- we do not want to buffer the entire data before sending it, but the receiving end
     needs to know whether or not there is more data coming.
@@ -764,4 +789,4 @@ if __name__ == '__main__':
     import doctest
     (failure_count, test_count) = doctest.testmod()
     if failure_count:
-        exit(-1)
+        sys.exit(-1)

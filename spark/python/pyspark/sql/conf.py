@@ -20,6 +20,9 @@ import sys
 from pyspark import since, _NoValue
 from pyspark.rdd import ignore_unicode_prefix
 
+if sys.version_info[0] >= 3:
+    basestring = str
+
 
 class RuntimeConfig(object):
     """User-facing configuration API, accessible through `SparkSession.conf`.
@@ -59,15 +62,22 @@ class RuntimeConfig(object):
 
     def _checkType(self, obj, identifier):
         """Assert that an object is of type str."""
-        if not isinstance(obj, str) and not isinstance(obj, unicode):
+        if not isinstance(obj, basestring):
             raise TypeError("expected %s '%s' to be a string (was '%s')" %
                             (identifier, obj, type(obj).__name__))
+
+    @ignore_unicode_prefix
+    @since(2.4)
+    def isModifiable(self, key):
+        """Indicates whether the configuration property with the given key
+        is modifiable in the current session.
+        """
+        return self._jconf.isModifiable(key)
 
 
 def _test():
     import os
     import doctest
-    from pyspark.context import SparkContext
     from pyspark.sql.session import SparkSession
     import pyspark.sql.conf
 
@@ -83,7 +93,7 @@ def _test():
     (failure_count, test_count) = doctest.testmod(pyspark.sql.conf, globs=globs)
     spark.stop()
     if failure_count:
-        exit(-1)
+        sys.exit(-1)
 
 if __name__ == "__main__":
     _test()

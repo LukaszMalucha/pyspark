@@ -63,6 +63,10 @@ class SparkContext(object):
     Main entry point for Spark functionality. A SparkContext represents the
     connection to a Spark cluster, and can be used to create L{RDD} and
     broadcast variables on that cluster.
+
+    .. note:: :class:`SparkContext` instance is not supported to share across multiple
+        processes out of the box, and PySpark does not guarantee multi-processing execution.
+        Use threads instead for concurrent processing purpose.
     """
 
     _gateway = None
@@ -140,7 +144,7 @@ class SparkContext(object):
         self.environment = environment or {}
         # java gateway must have been launched at this point.
         if conf is not None and conf._jconf is not None:
-            # conf has been initialized in JVM properly, so use conf directly. This represent the
+            # conf has been initialized in JVM properly, so use conf directly. This represents the
             # scenario that JVM has been launched before SparkConf is created (e.g. SparkContext is
             # created and then stopped, and we create a new SparkConf and new SparkContext again)
             self._conf = conf
@@ -513,35 +517,51 @@ class SparkContext(object):
             c = list(c)    # Make it a list so we can compute its length
         batchSize = max(1, min(len(c) // numSlices, self._batchSize or 1024))
         serializer = BatchedSerializer(self._unbatched_serializer, batchSize)
-        jrdd = self._serialize_to_jvm(c, numSlices, serializer)
+
+        def reader_func(temp_filename):
+            return self._jvm.PythonRDD.readRDDFromFile(self._jsc, temp_filename, numSlices)
+
+        def createRDDServer():
+            return self._jvm.PythonParallelizeServer(self._jsc.sc(), numSlices)
+
+        jrdd = self._serialize_to_jvm(c, serializer, reader_func, createRDDServer)
         return RDD(jrdd, self, serializer)
 
-    def _serialize_to_jvm(self, data, parallelism, serializer):
+    def _serialize_to_jvm(self, data, serializer, reader_func, createRDDServer):
         """
         Using py4j to send a large dataset to the jvm is really slow, so we use either a file
         or a socket if we have encryption enabled.
+        :param data:
+        :param serializer:
+        :param reader_func:  A function which takes a filename and reads in the data in the jvm and
+                returns a JavaRDD. Only used when encryption is disabled.
+        :param createRDDServer:  A function which creates a PythonRDDServer in the jvm to
+               accept the serialized data, for use when encryption is enabled.
+        :return:
         """
         if self._encryption_enabled:
             # with encryption, we open a server in java and send the data directly
-            server = self._jvm.PythonParallelizeServer(self._jsc.sc(), parallelism)
+            server = createRDDServer()
             (sock_file, _) = local_connect_and_auth(server.port(), server.secret())
             chunked_out = ChunkedStream(sock_file, 8192)
             serializer.dump_stream(data, chunked_out)
             chunked_out.close()
             # this call will block until the server has read all the data and processed it (or
             # throws an exception)
-            return server.getResult()
+            r = server.getResult()
+            return r
         else:
             # without encryption, we serialize to a file, and we read the file in java and
             # parallelize from there.
             tempFile = NamedTemporaryFile(delete=False, dir=self._temp_dir)
             try:
-                serializer.dump_stream(data, tempFile)
-                tempFile.close()
-                readRDDFromFile = self._jvm.PythonRDD.readRDDFromFile
-                return readRDDFromFile(self._jsc, tempFile.name, parallelism)
+                try:
+                    serializer.dump_stream(data, tempFile)
+                finally:
+                    tempFile.close()
+                return reader_func(tempFile.name)
             finally:
-                # we eagerly read the file so we can delete right after.
+                # we eagerily reads the file so we can delete right after.
                 os.unlink(tempFile.name)
 
     def pickleFile(self, name, minPartitions=None):
@@ -879,6 +899,8 @@ class SparkContext(object):
         A directory can be given if the recursive option is set to True.
         Currently directories are only supported for Hadoop-supported filesystems.
 
+        .. note:: A path can be added only once. Subsequent additions of the same path are ignored.
+
         >>> from pyspark import SparkFiles
         >>> path = os.path.join(tempdir, "test.txt")
         >>> with open(path, "w") as testFile:
@@ -899,6 +921,8 @@ class SparkContext(object):
         SparkContext in the future.  The C{path} passed can be either a local
         file, a file in HDFS (or other Hadoop-supported filesystems), or an
         HTTP, HTTPS or FTP URI.
+
+        .. note:: A path can be added only once. Subsequent additions of the same path are ignored.
         """
         self.addFile(path)
         (dirname, filename) = os.path.split(path)  # dirname may be directory or HDFS/S3 prefix
@@ -961,10 +985,10 @@ class SparkContext(object):
         >>> def stop_job():
         ...     sleep(5)
         ...     sc.cancelJobGroup("job_to_cancel")
-        >>> supress = lock.acquire()
-        >>> supress = threading.Thread(target=start_job, args=(10,)).start()
-        >>> supress = threading.Thread(target=stop_job).start()
-        >>> supress = lock.acquire()
+        >>> suppress = lock.acquire()
+        >>> suppress = threading.Thread(target=start_job, args=(10,)).start()
+        >>> suppress = threading.Thread(target=stop_job).start()
+        >>> suppress = lock.acquire()
         >>> print(result)
         Cancelled
 
@@ -1079,7 +1103,7 @@ def _test():
     (failure_count, test_count) = doctest.testmod(globs=globs, optionflags=doctest.ELLIPSIS)
     globs['sc'].stop()
     if failure_count:
-        exit(-1)
+        sys.exit(-1)
 
 
 if __name__ == "__main__":

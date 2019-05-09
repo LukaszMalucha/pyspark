@@ -85,6 +85,6 @@ class ByteArrayOutput(object):
 if __name__ == '__main__':
     from pyspark.test_serializers import *
     if xmlrunner:
-        unittest.main(testRunner=xmlrunner.XMLTestRunner(output='target/test-reports'))
+        unittest.main(testRunner=xmlrunner.XMLTestRunner(output='target/test-reports'), verbosity=2)
     else:
-        unittest.main()
+        unittest.main(verbosity=2)
