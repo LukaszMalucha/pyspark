@@ -1,3 +1,9 @@
-import sys
+import findspark
 
-print("Hello " + sys.argv[1] + " from " + sys.argv[0])
+
+
+
+findspark.init('')
+
+
+print ('ok')
