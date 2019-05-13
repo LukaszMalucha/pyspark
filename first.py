@@ -2,7 +2,7 @@ import findspark
 import os.path
 import time
 
-from pyspark import SparkContext
+from pyspark import SparkContext, SparkConf
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
 from pyspark.sql.functions import desc
@@ -17,19 +17,19 @@ findspark.init(spark_path)
 
 
 if __name__ == "__main__":
-    sc = SparkContext()
-    ssc = StreamingContext(sc, 1)
+    ## Start spark context
+    conf = SparkConf().setMaster("local[*]").setAppName("PythonStreamingQueueStream")
+    sc = SparkContext(conf=conf)
+    ssc = StreamingContext(sc, 1) ## spark context, seconds
 
-    rddQueue = []
-    for i in range(5):
-        rddQueue += [ ssc.sparkContext.parallelize([j for j in range(1, 1001)], 10)]
+    stream = ssc.queueStream([sc.parallelize([(1,"a"), (2,"b"),(1, "c"),(2,"d"),(1,"e"),(3, "f")],3)])
 
-    inputStream = ssc.queueStream(rddQueue)
-    mappedStream = inputStream.map(lambda x: (x % 10, 1))
-    reducedStream = mappedStream.reduceByKey(lambda a, b: a+b)
-    reducedStream.pprint()
+    maxstream = stream.reduce(max)
+    maxstream.pprint()
 
     ssc.start()
-    time.sleep(6)
+
     ssc.stop(stopSparkContext=True, stopGraceFully=True)
+
+
 
